@@ -13,5 +13,5 @@ class Command(BaseCommand):
             for row in file_reader:
                 ingredient_list.append(
                     Ingredient(name=row[0], measurement_unit=row[1])
-                    )
+                )
             Ingredient.objects.bulk_create(ingredient_list)

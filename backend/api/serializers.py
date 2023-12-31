@@ -65,7 +65,7 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
-        )
+    )
 
     class Meta:
         model = IngredientRecipe
@@ -137,15 +137,15 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         if not ingredients:
             raise serializers.ValidationError(
                 'Необходимо указать хотя бы один ингредиент.'
-                )
+            )
         if not tags:
             raise serializers.ValidationError(
                 'Необходимо указать хотя бы один тег.'
-                )
+            )
         if not image:
             raise serializers.ValidationError(
                 'Необходимо прикрепить изображение.'
-                )
+            )
         return validated_data
 
     def create(self, validated_data):
@@ -229,7 +229,7 @@ class FollowSerializer(serializers.ModelSerializer):
         if user == author:
             raise serializers.ValidationError(
                 "Вы не можете подписаться на себя!"
-                )
+            )
 
         return data
 
