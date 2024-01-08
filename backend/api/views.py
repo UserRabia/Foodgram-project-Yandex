@@ -100,16 +100,19 @@ class RecipeViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    @action(detail=True, methods=['post', 'delete'])
-    def favorite(self, request, pk):
+    def _favorite_or_shopping_cart(self,
+                                   request,
+                                   pk,
+                                   model_name,
+                                   serializer_name):
         user = self.request.user
         recipe = get_object_or_404(Recipe, id=pk)
-        favorite = Favorite.objects.filter(user=user, favorite=recipe)
+        case_name = model_name.objects.filter(user=user, recipe=recipe)
         if request.method == 'POST':
-            if not favorite.exists():
-                Favorite.objects.create(user=user, favorite=recipe)
-                serializer = FavoriteSerializer(
-                    favorite, context={'request': request}
+            if not case_name.exists():
+                case_name = model_name.objects.create(user=user, recipe=recipe)
+                serializer = serializer_name(
+                    case_name, context={'request': request}
                 )
                 return Response(serializer.data,
                                 status=status.HTTP_201_CREATED)
@@ -117,48 +120,42 @@ class RecipeViewSet(ModelViewSet):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if request.method == 'DELETE':
-            if favorite.exists():
-                favorite.delete()
+            if case_name.exists():
+                case_name.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post', 'delete'])
+    def favorite(self, request, pk):
+        return self._favorite_or_shopping_cart(
+            request,
+            pk,
+            Favorite,
+            FavoriteSerializer
+        )
 
     @action(detail=True, methods=['post', 'delete'])
     def shopping_cart(self, request, pk):
-        user = self.request.user
-        recipe = get_object_or_404(Recipe, id=pk)
-        cart = Cart.objects.filter(user=user, recipe=recipe)
-        if request.method == 'POST':
-            if not cart.exists():
-                Cart.objects.create(user=user, recipe=recipe)
-                serializer = CartSerializer(
-                    cart, context={'request': request}
-                )
-                return Response(serializer.data,
-                                status=status.HTTP_201_CREATED)
-            else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        if request.method == 'DELETE':
-            if cart.exists():
-                cart.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return self._favorite_or_shopping_cart(
+            request,
+            pk,
+            Cart,
+            CartSerializer
+        )
 
     @action(detail=False, methods=['get'])
     def download_shopping_cart(self, request):
         user = self.request.user
         ingredients_list = (
             IngredientRecipe.objects
-            .filter(recipe__recipecart__user=user)
+            .filter(recipe__cart_recipe__user=user)
             .values('ingredient')
-            .annotate(amount=Sum('amount'))
+            .annotate(amount_ingredient=Sum('amount'))
             .values_list(
                 'ingredient__name',
-                'amount',
+                'amount_ingredient',
                 'ingredient__measurement_unit'
             )
         )

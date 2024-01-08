@@ -22,7 +22,7 @@ class RecipeFilter(FilterSet):
         user = self.request.user
         if value:
             favorites = Favorite.objects.filter(user=user).values_list(
-                'favorite'
+                'recipe'
             )
             return queryset.filter(id__in=favorites)
         return queryset

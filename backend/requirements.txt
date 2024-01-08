@@ -5,5 +5,5 @@ djangorestframework==3.14.0
 djoser==2.2.2
 drf-extra-fields==3.7.0
 Pillow==10.1.0
-psycopg2-binary==2.9.3 
+psycopg2-binary==2.9.7
 python-dotenv==1.0.0
