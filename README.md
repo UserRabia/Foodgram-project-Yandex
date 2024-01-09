@@ -5,8 +5,8 @@
 Foodgram доступен по адресу [http://yandfoodgram.hopto.org/](http://yandfoodgram.hopto.org/)
 
 Данные для входа в админку:
-username: Admin
-password: adminadmin
+электронная почта: a@a.ru
+пароль: adminadmin
 
 ## Возможности
 
