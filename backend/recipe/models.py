@@ -1,9 +1,9 @@
-from django.db import models
+from colorfield.fields import ColorField
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
-from colorfield.fields import ColorField
-from users.models import User
+from django.db import models
 from foodgram.constants import FIXED_STRING_LENGTH
+from users.models import User
 
 
 class Ingredient(models.Model):

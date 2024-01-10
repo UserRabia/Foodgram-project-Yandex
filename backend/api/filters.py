@@ -1,7 +1,9 @@
-from django_filters.rest_framework import (FilterSet,
-                                           filters,
-                                           ModelMultipleChoiceFilter)
-from recipe.models import Favorite, Cart, Tag, Recipe, User
+from django_filters.rest_framework import (
+    FilterSet,
+    ModelMultipleChoiceFilter,
+    filters
+)
+from recipe.models import Cart, Favorite, Recipe, Tag, User
 
 
 class RecipeFilter(FilterSet):

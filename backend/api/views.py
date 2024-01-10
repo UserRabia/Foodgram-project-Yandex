@@ -1,33 +1,36 @@
-from django.shortcuts import get_object_or_404, HttpResponse
 from django.db.models import Sum
-from djoser.views import UserViewSet
-from rest_framework import status
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.response import Response
-from rest_framework.decorators import action
+from django.shortcuts import HttpResponse, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
 from recipe.models import (
-    Tag,
-    Recipe,
-    Ingredient,
-    Follow,
-    Favorite,
     Cart,
-    IngredientRecipe
+    Favorite,
+    Follow,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    Tag
 )
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
 from users.models import User
-from .permissions import AdminOrAuthorOrReadOnly
 from api.serializers import (
-    TagSerializer,
-    RecipeSerializer,
+    CartSerializer,
+    CustomUserSerializer,
+    FavoriteSerializer,
+    FollowSerializer,
     IngredientSerializer,
     RecipeCreateSerializer,
-    CustomUserSerializer,
-    FollowSerializer,
-    FavoriteSerializer,
-    CartSerializer
+    RecipeSerializer,
+    TagSerializer
 )
+from .paginator import CartPaginator, CustomPaginator
+
 from .filters import RecipeFilter
+from .permissions import AdminOrAuthorOrReadOnly
 
 
 class UserViewSet(UserViewSet):
@@ -91,6 +94,7 @@ class RecipeViewSet(ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     permission_classes = (AdminOrAuthorOrReadOnly,)
+    pagination_class = CustomPaginator
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -136,7 +140,11 @@ class RecipeViewSet(ModelViewSet):
             FavoriteSerializer
         )
 
-    @action(detail=True, methods=['post', 'delete'])
+    @action(
+            detail=True,
+            methods=['post', 'delete'],
+            pagination_class=CartPaginator
+        )
     def shopping_cart(self, request, pk):
         return self._favorite_or_shopping_cart(
             request,

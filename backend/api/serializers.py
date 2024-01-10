@@ -1,17 +1,16 @@
-from rest_framework import serializers
-from drf_extra_fields.fields import Base64ImageField
-from djoser.serializers import UserSerializer
 from django.core.validators import MaxValueValidator
-
+from djoser.serializers import UserSerializer
+from drf_extra_fields.fields import Base64ImageField
 from recipe.models import (
-    Tag,
-    Recipe,
-    IngredientRecipe,
-    Ingredient,
+    Cart,
     Favorite,
-    Cart
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    Tag,
+    User
 )
-from users.models import User
+from rest_framework import serializers
 
 
 class TagSerializer(serializers.ModelSerializer):

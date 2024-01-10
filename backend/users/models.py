@@ -1,8 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from foodgram.constants import (
-    USER_FIXED_STRING_LENGTH,
-    EMAIL_FIXED_STRING_LENGTH
+    EMAIL_FIXED_STRING_LENGTH,
+    USER_FIXED_STRING_LENGTH
 )
 
 
