@@ -120,12 +120,12 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, validated_data):
         ingredients = validated_data.get('ingredients')
-        ingredient_names = [ingredient.get('name')
-                            for ingredient in ingredients]
+        ingredient_id = [ingredient.get('id')
+                         for ingredient in ingredients]
         tags = validated_data.get('tags')
         image = validated_data.get('image')
 
-        if not ingredients or len(ingredient_names) is None:
+        if not ingredients or len(ingredient_id) is None:
             raise serializers.ValidationError(
                 'Необходимо указать хотя бы один ингредиент.'
             )
@@ -143,7 +143,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 'Теги должны быть уникальными.'
             )
 
-        if len(ingredient_names) != len(set(ingredient_names)):
+        if len(ingredient_id) != len(set(ingredient_id)):
             raise serializers.ValidationError(
                 'Ингредиенты должны быть уникальными.'
             )
