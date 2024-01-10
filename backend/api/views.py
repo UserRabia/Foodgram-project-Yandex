@@ -141,10 +141,10 @@ class RecipeViewSet(ModelViewSet):
         )
 
     @action(
-            detail=True,
-            methods=['post', 'delete'],
-            pagination_class=CartPaginator
-        )
+        detail=True,
+        methods=['post', 'delete'],
+        pagination_class=CartPaginator
+    )
     def shopping_cart(self, request, pk):
         return self._favorite_or_shopping_cart(
             request,
